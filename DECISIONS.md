@@ -285,6 +285,19 @@ them here.
   Merged release manifests were checked: exported components are exactly MainActivity, BootReceiver,
   the permission-gated listener (Full/Vibes), and permission-gated library components.
 
+- **F-Droid preparation — 2026-10-13 (v0.3.5), not yet submitted.** F-Droid builds from source and
+  signs with its own key, one app per application id. Decisions: (1) list only the **`full`**
+  edition (the superset); Standalone and Vibes stay on GitHub Releases. (2) F-Droid-signed installs and
+  GitHub-release installs can't update each other (different signing key), so a user picks one source.
+  Reproducible-build verification against the GitHub APKs (which would let F-Droid publish the
+  maintainer's signature) was not attempted. (3) Repo changes: `dependenciesInfo` off (F-Droid rejects
+  the Google-signed blob; confirmed present in 0.3.4's signing block, absent in 0.3.5's); wrapper
+  checksum added; `gradle-daemon-jvm.properties` removed (unverified JDK 25 download; the build works
+  on a plain JDK 17+, re-checked: tests, lint and all three release builds pass). (4) The release-signing
+  fail-closed check needs `-PallowDebugSignedRelease` on F-Droid's builder, set via `gradleprops` in the
+  draft recipe (`docs/fdroid/dev.fitnesstimer.yml`). Unverified: F-Droid's build server having Android
+  platform 37 (`compileSdk`) and a JDK that runs Gradle 9.7.1 / AGP 9.4.0; reviewers will find out.
+
 ## Needs a decision, not urgent
 
 - **Artwork bars — RESOLVED 2026-09-21:** auto-trim implemented (`ArtTrim.kt`, `PLAN.md`
