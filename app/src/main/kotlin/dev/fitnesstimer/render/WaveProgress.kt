@@ -54,7 +54,7 @@ private const val TICK_MS = 33L
 private const val FAKE_BEAT_MS = 469.0 // ~128 bpm, a common dance-music tempo
 
 /**
- * LOCAL EXPERIMENT (DECISIONS.md, not distributed): a procedural stand-in for real audio analysis,
+ * Vibes edition (DECISIONS.md): a procedural stand-in for real audio analysis,
  * used only by the `vibes` edition, which has no RECORD_AUDIO permission at all. Driven by playback
  * position (not wall-clock time) so it's deterministic and loops back cleanly on seek/repeat — not
  * an attempt to reflect the actual track, just a plausible-looking beat pulse.

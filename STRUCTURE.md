@@ -61,7 +61,7 @@ setbeat/
         │   ├── PositionExtrapolator.kt       # pure: position + elapsed * speed
         │   ├── NullGrace.kt                  # pure: hold the last value through ~150 ms between-track gaps
         │   ├── AudioBands.kt                 # pure: FFT -> low/mid/high, adaptive gain + beat emphasis, smoothing
-        │   ├── AudioLevelSource.kt           # Visualizer(0) capture (needs RECORD_AUDIO), status ACTIVE/SILENT/FAILED
+        │   ├── AudioLevelSource.kt           # Visualizer capture: session 0, then the playing track's own session when the mix is silent (needs RECORD_AUDIO), status ACTIVE/SILENT/FAILED
         │   └── NowPlaying.kt                 # data class (title, artist, album, artwork, position, state, actions)
         └── ui/
             └── CompanionScreen.kt            # BUILT: CompanionBody (reuses render/AudioVisual + title/artist + timer),

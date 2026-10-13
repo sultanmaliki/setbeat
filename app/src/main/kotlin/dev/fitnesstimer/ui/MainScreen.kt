@@ -136,7 +136,7 @@ fun MainScreen(debugUris: List<Uri> = emptyList()) {
     // otherwise the local player is shown. Survives Activity recreation.
     // The standalone edition has no companion mode at all (see app/build.gradle.kts).
     val companionAvailable = remember { context.resources.getBoolean(R.bool.companion_enabled) }
-    // LOCAL EXPERIMENT (DECISIONS.md, not distributed): this edition has no RECORD_AUDIO permission,
+    // Vibes edition (DECISIONS.md): this edition has no RECORD_AUDIO permission,
     // so it must never show the real-capture permission/hint UI and the wave is always the fake one.
     val fakeWave = remember { context.resources.getBoolean(R.bool.fake_wave) }
     var companionMode by rememberSaveable { mutableStateOf(companionAvailable && debugUris.isEmpty()) }

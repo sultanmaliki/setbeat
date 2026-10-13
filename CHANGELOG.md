@@ -4,7 +4,19 @@ All notable changes to SetBeat, newest first. Each release has fuller notes (and
 [Releases](https://github.com/sultanmaliki/setbeat/releases) page. Versions before 0.2.3 were published
 under the earlier app names *Fitness Timer* (0.1 to 0.2) and *Cadence* (0.2.1 to 0.2.2).
 
-## 0.3.4 - security hardening from a source audit
+## 0.3.4 - the wave works with spatial audio on, plus security hardening
+- **Fixed: the beat wave stayed flat with Xiaomi's "Immersive sound" on.** Owner report, then
+  confirmed on the phone: the system spatializer carries the music on a path the app's audio reader
+  (session 0, the main mix) never sees (`peak=0.0`); turning it off gave real data. The earlier
+  explanation (hardware offload / Bluetooth) was wrong for this phone. Full now notices when the main
+  mix is silent while music plays, scans for the playing track's own audio session, and reads that
+  instead. Re-checked on-device with Immersive sound **on**: live bass/mid/treble, and it re-attached
+  within about 4 seconds after skipping a track. Only loudness levels are read, nothing is stored, it
+  runs only while the companion screen is visible and playing, and it needs no new permission.
+  Hardware offload is a separate real limit that no app can read; the hint card still covers it and
+  now also tells you to try switching spatial audio off.
+- **Docs corrected:** README, DECISIONS and the in-app card no longer blame Bluetooth/offload for
+  everything; the Vibes edition is described as the always-moving option rather than a fix.
 - **The playback service is no longer reachable by other apps.** `PlaybackService` was exported
   with no permission, and Media3's default start handling acts on a media-button or notification-action
   intent without ever running the app's controller allow-list. Another app could in principle have
@@ -14,8 +26,9 @@ under the earlier app names *Fitness Timer* (0.1 to 0.2) and *Cadence* (0.2.1 to
 - **Release builds refuse to be signed with the debug key.** Without the private `keystore.properties`,
   packaging a release now fails with a clear message instead of silently producing a debug-signed APK
   that can't update real installs. `-PallowDebugSignedRelease` opts back in for throwaway local builds.
-- No behavior change otherwise. Found by a source-only security audit (no confirmed vulnerabilities;
-  one low-impact lead, fixed here).
+- The two security changes above came from a source-only security audit (no confirmed
+  vulnerabilities; one low-impact lead, fixed here and re-tested on the phone: the same `adb` intent
+  that used to start the timer is now refused). Nothing else changed.
 
 ## 0.3.3 - a third edition: Vibes, for a wave that's always moving
 - **New edition: Vibes.** Same real track info as Full (companion mode, needs notification access),

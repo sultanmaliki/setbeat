@@ -60,10 +60,11 @@ android {
     //                this edition is for Google Play or `adb install`.
     //  - standalone: no notification listener and no audio capture, so it installs anywhere.
     //                Local media, playlists and the timer only.
-    //  - vibes:      LOCAL EXPERIMENT, not distributed (DECISIONS.md). Companion mode's real track
-    //                info, but the wave is a procedural animation instead of real audio analysis —
-    //                tried only after confirming on-device that no available music app supports the
-    //                real fix (attaching to an announced track session). No Record audio permission.
+    //  - vibes:      companion mode's real track info, but the wave is a procedural animation
+    //                instead of real audio analysis, so it always moves (published edition,
+    //                DECISIONS.md). No Record audio permission. Full now finds the playing track's
+    //                own audio session when the system mix is silent, so Vibes is for people who
+    //                want guaranteed motion rather than a wave that follows the real audio.
     flavorDimensions += "edition"
     productFlavors {
         create("full") { dimension = "edition" }

@@ -16,7 +16,7 @@ import dev.fitnesstimer.ui.MainScreen
 
 class MainActivity : ComponentActivity() {
     private val companionEnabled by lazy { resources.getBoolean(R.bool.companion_enabled) }
-    // LOCAL EXPERIMENT (DECISIONS.md, not distributed): this edition has no RECORD_AUDIO permission
+    // Vibes edition (DECISIONS.md): this edition has no RECORD_AUDIO permission
     // at all, so the real audio capture must never be touched, not just left unused.
     private val fakeWave by lazy { resources.getBoolean(R.bool.fake_wave) }
 
