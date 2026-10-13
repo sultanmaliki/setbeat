@@ -4,6 +4,19 @@ All notable changes to SetBeat, newest first. Each release has fuller notes (and
 [Releases](https://github.com/sultanmaliki/setbeat/releases) page. Versions before 0.2.3 were published
 under the earlier app names *Fitness Timer* (0.1 to 0.2) and *Cadence* (0.2.1 to 0.2.2).
 
+## 0.3.4 - security hardening from a source audit
+- **The playback service is no longer reachable by other apps.** `PlaybackService` was exported
+  with no permission, and Media3's default start handling acts on a media-button or notification-action
+  intent without ever running the app's controller allow-list. Another app could in principle have
+  started/paused your timer or sent transport commands. It is now `exported="false"`: the lock-screen /
+  notification media controls, headset buttons and the in-app player use the platform media session and
+  same-app intents, so nothing legitimate depends on the export.
+- **Release builds refuse to be signed with the debug key.** Without the private `keystore.properties`,
+  packaging a release now fails with a clear message instead of silently producing a debug-signed APK
+  that can't update real installs. `-PallowDebugSignedRelease` opts back in for throwaway local builds.
+- No behavior change otherwise. Found by a source-only security audit (no confirmed vulnerabilities;
+  one low-impact lead, fixed here).
+
 ## 0.3.3 - a third edition: Vibes, for a wave that's always moving
 - **New edition: Vibes.** Same real track info as Full (companion mode, needs notification access),
   but the wave is a procedural animation instead of real audio analysis — it always looks alive,

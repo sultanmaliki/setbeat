@@ -100,9 +100,10 @@ class PlaybackService : MediaSessionService() {
             session: MediaSession,
             controller: MediaSession.ControllerInfo,
         ): MediaSession.ConnectionResult {
-            // The service must be exported (system UI, Bluetooth, Android Auto
-            // connect from outside), so gate here: only our own app, the
-            // system media notification, or system-trusted controllers.
+            // The service is not exported (system UI and Bluetooth use the platform
+            // media session, not a bind to this service), so other apps cannot start
+            // it or bind to it directly. Still gate here, defence in depth: only our
+            // own app, the system media notification, or system-trusted controllers.
             val allowed = controller.packageName == packageName ||
                 session.isMediaNotificationController(controller) ||
                 controller.isTrusted

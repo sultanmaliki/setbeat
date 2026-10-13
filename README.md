@@ -152,7 +152,8 @@ rest.
 ```
 
 Release builds are signed with a private key read from a gitignored `keystore.properties`; without it
-(a fresh clone) they fall back to the debug key so they still build.
+(a fresh clone) packaging a release fails on purpose, so nothing is ever quietly signed with the debug key.
+Add `-PallowDebugSignedRelease` for a throwaway local build.
 
 There are also 30 on-device tests that drive the real gesture engine and the whole timer flow on a phone. See
 [`CONTRIBUTING.md`](CONTRIBUTING.md) for how to run them safely (Gradle's own connected-test task

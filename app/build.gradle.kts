@@ -6,10 +6,25 @@ plugins {
 }
 
 // Private release signing key: keystore.properties is gitignored and lives only on the maintainer's
-// machine. Without it (a fresh clone) release builds fall back to the debug key so they still build.
+// machine. Without it (a fresh clone) packaging a release APK/bundle FAILS, so a build can never
+// quietly ship signed with the well-known debug key. Pass -PallowDebugSignedRelease to opt in
+// deliberately (local experiments only; such an APK cannot update, or be updated by, a real release).
 val keystoreProps = Properties().apply {
     val f = rootProject.file("keystore.properties")
     if (f.exists()) f.inputStream().use { load(it) }
+}
+val hasReleaseKey = keystoreProps.containsKey("storeFile")
+val allowDebugSignedRelease = providers.gradleProperty("allowDebugSignedRelease").isPresent
+tasks.matching { it.name.matches(Regex("(package|bundle)\\w*Release")) }.configureEach {
+    doFirst {
+        if (!hasReleaseKey && !allowDebugSignedRelease) {
+            throw GradleException(
+                "keystore.properties not found: refusing to produce a release signed with the debug key. " +
+                    "Add the private key config (see CONTRIBUTING.md), or pass -PallowDebugSignedRelease " +
+                    "for a throwaway local build."
+            )
+        }
+    }
 }
 
 android {
@@ -22,8 +37,8 @@ android {
         // Not yet the final v1 minSdk decision.
         minSdk = 29
         targetSdk = 37
-        versionCode = 9
-        versionName = "0.3.3"
+        versionCode = 10
+        versionName = "0.3.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
