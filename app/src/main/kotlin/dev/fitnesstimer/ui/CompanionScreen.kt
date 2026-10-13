@@ -210,13 +210,14 @@ fun BeatAccessCard(onEnable: () -> Unit, onDismiss: () -> Unit, modifier: Modifi
  * Shown when audio access is granted and companion audio is playing, but the
  * visualizer keeps reporting silence (AudioLevelSource.Status.SILENT): the
  * wave falls back to a faint idle ripple, which reads as broken rather than
- * "no data available". Root cause (confirmed on-device 2026-09-22, and by
- * Android's own offload-audio design — DECISIONS.md): some music apps decode
- * compressed audio (MP3, FLAC, …) on a low-power DSP path ("hardware
- * offload") that bypasses AudioFlinger's mixer entirely, so the global-mix
- * effect the wave reads (Visualizer, session 0) never receives any data.
- * This happens over Bluetooth *and* straight out of the phone speaker,
- * depending on the player and the phone — it is not Bluetooth-specific, so
+ * "no data available". By the time this shows, [AudioLevelSource] has already
+ * failed on the global mix (session 0) AND on its scan for the playing track's
+ * own audio session. Known causes (DECISIONS.md): hardware audio offload
+ * (confirmed 2026-09-22) — compressed audio decoded on a low-power DSP path
+ * that bypasses AudioFlinger's mixer entirely — and system spatial-audio
+ * effects such as Xiaomi's "Immersive sound" (2026-10-13), which the track
+ * session scan normally gets around. Both happen over Bluetooth *and* straight
+ * out of the phone speaker, so it is not Bluetooth-specific and
  * [bluetoothActive] (from [dev.fitnesstimer.nowplaying.isBluetoothAudioOutputActive])
  * picks accurate wording instead of blaming Bluetooth when the phone is
  * playing through its own speaker. Separate overlay (not inside the gesture
@@ -238,14 +239,16 @@ fun BeatSilentHintCard(bluetoothActive: Boolean, onDismiss: () -> Unit, modifier
                     "Audio access is on, but Android isn't handing this app any sound to measure. This phone is " +
                         "on Bluetooth right now, which often routes audio through a battery-saving hardware path " +
                         "that skips the system effects the wave reads. Worth trying: disable \"Bluetooth A2DP " +
-                        "hardware offload\" in Developer options. If that doesn't help, or if the wave stays flat " +
-                        "later without Bluetooth too, it's the player itself — see below."
+                        "hardware offload\" in Developer options, and if your phone has a spatial-audio effect " +
+                        "(on Xiaomi/POCO: Immersive sound), try switching it off. SetBeat already tried the " +
+                        "music app's own audio too, so if the wave stays flat it's the player's own decode path."
                 } else {
                     "Audio access is on, but Android isn't handing this app any sound to measure — and this isn't " +
-                        "a Bluetooth thing, since nothing's connected right now. Some music apps decode audio " +
-                        "through a battery-saving hardware path that skips the system effects the wave reads, " +
-                        "straight out of the phone speaker or wired output too. There's no reliable fix from " +
-                        "inside this app; it depends on the player and sometimes even the track."
+                        "a Bluetooth thing, since nothing's connected right now. SetBeat already tried the music " +
+                        "app's own audio too. If your phone has a spatial-audio effect (on Xiaomi/POCO: Sound " +
+                        "effects → Immersive sound), try switching it off. Some music apps also decode audio " +
+                        "through a battery-saving hardware path that no app can read, which depends on the " +
+                        "player and sometimes even the track."
                 },
                 color = Color.White.copy(alpha = 0.75f),
                 style = MaterialTheme.typography.bodySmall,

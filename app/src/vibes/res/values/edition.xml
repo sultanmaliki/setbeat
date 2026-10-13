@@ -2,6 +2,6 @@
 <resources>
     <!-- Whether this edition includes companion mode (see app/build.gradle.kts). -->
     <bool name="companion_enabled">true</bool>
-    <!-- LOCAL EXPERIMENT (DECISIONS.md): the wave is a procedural animation, not real audio analysis. -->
+    <!-- Vibes edition (DECISIONS.md): the wave is a procedural animation, not real audio analysis. -->
     <bool name="fake_wave">true</bool>
 </resources>

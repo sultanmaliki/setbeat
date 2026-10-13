@@ -43,7 +43,10 @@ them here.
 - **Cleanup pass — done 2026-09-21** (`PLAN.md` N.5h): unused code, stale heap dump and intermediate
   test logs removed; nothing user-visible changed.
 - **Beat wave silently not reacting — RESOLVED 2026-09-22 with an honest in-app hint; root cause
-  confirmed on-device, and it is not Bluetooth-specific.** Owner report: at the gym, in companion mode
+  confirmed on-device, and it is not Bluetooth-specific. (CORRECTED 2026-10-13: on the owner's phone
+  the cause was the system spatializer, not hardware offload — see the 2026-10-13 entry below. The
+  offload explanation here is real Android behavior but was not what was happening on this phone.)**
+  Owner report: at the gym, in companion mode
   over Bluetooth headphones, the wave stayed a flat idle ripple. `AudioLevelSource` already
   distinguished this (`Status.SILENT`: the visualizer is running, RECORD_AUDIO is granted, but capture
   keeps returning zeros) from "nothing playing", but the UI never surfaced the difference — both looked
@@ -243,6 +246,44 @@ them here.
   v1, it directly opens the SAF file picker rather than a picker-of-pickers.
   Revisit this if/when MediaSession sources are added (roadmap step 6) —
   then it needs to actually pick between sources, not just open one.
+
+- **Silent wave root cause corrected, and a real fix found — 2026-10-13 (v0.3.4).** The owner said
+  the earlier "hardware offload" diagnosis was wrong for their phone, and tested by hand. On the POCO X7
+  Pro (HyperOS, Mi Music playing, Redmi Buds connected), with **Immersive sound** on (Settings →
+  Sound effects → Dolby effects; Dolby Atmos itself can stay selected), `dumpsys audio` showed the
+  playing track flagged `isSpatialized=true`, running on a dedicated SPATIALIZER output thread
+  (`Current effect: dolby, spatializer enabled: true`), and the app logged `[viz] peak=0.0` constantly.
+  With Immersive sound off the same app and track gave `peak≈90–130` and live bands. So the
+  global-mix `Visualizer(0)` doesn't carry spatialized tracks; that, not offload, was the cause here.
+  **Fix:** when session 0 stays silent, `AudioLevelSource` scans recent audio session ids
+  (`AudioManager.generateAudioSessionId()` gives the newest; constructing a `Visualizer` on an id
+  that doesn't exist fails fast, so only live sessions answer) and attaches to the one carrying real
+  audio. Verified on-device with Immersive sound on: it found the track's session within ~4 s
+  (`best=98769 peak≈118`) and the wave followed the music; skipping a track made it re-scan and switch
+  to the new session (98841 → 98857) in ~4 s; pausing stops the visualizer as before. It reads
+  magnitudes only, keeps nothing, runs only while the companion screen is visible and playing, needs
+  no permission beyond the existing RECORD_AUDIO/MODIFY_AUDIO_SETTINGS, and is rate-limited to one scan
+  per 10 s. It picks the loudest live session, so another app's concurrent audio could win; accepted
+  for a visualizer. Hardware offload (a real, separate Android limitation) is still unreadable, and
+  `BeatSilentHintCard` now says "already tried the music app's own audio" and names spatial audio as
+  something to switch off. Earlier decisions stand where still valid; the "real fix not possible"
+  conclusion of 2026-09-22 only covered the announce-broadcast route.
+  **Vibes edition:** it was built on the offload premise. It stays published as an always-moving
+  option (and its "not distributed" comments were corrected), but Full is now the edition that follows
+  real audio in more cases.
+- **Security audit, 2026-10-13 (v0.3.4).** A source-only audit (no code run) found no confirmed
+  vulnerability and one low-impact lead: `PlaybackService` was `exported="true"` with no permission,
+  and Media3 1.11.1's default `onStartCommand` handles media-button and custom-action start intents
+  without calling `onConnect`, so another app could in principle toggle the timer or send transport
+  commands as the notification controller. Reproduced from `adb shell` on the owner's phone with
+  v0.3.3 (one intent started the stopwatch). Fix: `android:exported="false"` — nothing legitimate
+  needs the export (system UI and Bluetooth use the platform media session; the app's own controller
+  and notification intents are same-app). Verified on-device: the same intents now fail with
+  `Requires permission not exported from uid …`, the timer was unaffected, and companion mode and the
+  media session still work. Also: release packaging now fails without `keystore.properties` instead of
+  silently using the debug key (`-PallowDebugSignedRelease` opts in for throwaway local builds).
+  Merged release manifests were checked: exported components are exactly MainActivity, BootReceiver,
+  the permission-gated listener (Full/Vibes), and permission-gated library components.
 
 ## Needs a decision, not urgent
 

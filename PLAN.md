@@ -680,6 +680,22 @@ and decisions recorded in `DECISIONS.md`; summary here:
    editions, lint clean, permissions re-verified with `aapt2`); `full`'s real wave and hint UI
    re-confirmed working on-device, unaffected by the shared-code changes for `vibes`.
 
+### N.5l Silent wave correction and fix, security hardening (2026-10-13, v0.3.4)
+
+1. **Root cause corrected** (see `DECISIONS.md`): on the owner's POCO X7 Pro, Xiaomi's *Immersive
+   sound* routed the music through the spatializer, which `Visualizer(0)` doesn't see. Not hardware
+   offload (still a real, separate limit). Confirmed by toggling it: `peak=0.0` → `peak≈100`.
+2. **Fix**: `AudioLevelSource` falls back from session 0 to the playing track's own session, found by
+   scanning recent session ids (only live sessions can be opened). Re-scans on track change, at most
+   once per 10 s, only while the companion screen is visible and playing. Verified on-device with
+   Immersive sound on, including a track skip.
+3. **Security audit** (source-only): no confirmed vulnerability; `PlaybackService` un-exported;
+   release signing fails closed without the private key.
+4. **Docs corrected**: the offload/Bluetooth-only story in README, DECISIONS, the hint card and the
+   stale "Vibes is a local experiment, not distributed" comments.
+5. **Not covered**: scripted track skipping and pause/resume could not be automated on this ROM
+   (injected input is blocked), so the track-change check was a manual skip by the owner.
+
 ### N.6 Phases
 
 - **P0 — Probe (device) — DONE 2026-09-21, see N.4:** with music playing, dump `dumpsys media_session`

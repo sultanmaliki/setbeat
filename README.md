@@ -68,11 +68,14 @@ Sample footage: <i>Big Buck Bunny</i> © Blender Foundation, <a href="https://pe
 
 SetBeat comes in **three editions** from the [Releases](https://github.com/sultanmaliki/setbeat/releases)
 page. They exist because of one specific problem: Android's audio visualizer (the API behind the
-beat-reactive wave) cannot see audio that a music app plays through a battery-saving hardware decode
-path, and there's no reliable way to detect or work around that from outside the app (confirmed
-on-device across multiple real apps — see `DECISIONS.md`). Standalone and Full sidestep this
-honestly (no wave, or a wave that tells you when it can't get real data); Vibes chooses to look good
-over being accurate. Pick by what you need:
+beat-reactive wave) can't always see what a music app plays. Two known causes, both found on a real
+phone (see `DECISIONS.md`): a **system spatial-audio effect** (on Xiaomi/POCO: *Sound effects →
+Immersive sound*) and a **battery-saving hardware decode path** ("hardware offload") some apps use.
+Since v0.3.4, Full works around the first on its own: when the system mix is silent it finds the
+playing track's own audio session and reads that instead, so the wave keeps moving with Immersive
+sound on. Hardware offload still can't be read by any app. Where Full really can't get audio it says
+so (a dismissible card) instead of faking a wave; Vibes is the edition that always animates, whatever
+is playing. Pick by what you need:
 
 | Edition | Download | What you get | Where it installs |
 |---|---|---|---|
@@ -89,8 +92,8 @@ choose *Allow restricted settings*, then try again. Optionally allow **Record au
 switch on the beat wave (see below).
 
 **Vibes:** same install and notification-access steps as Full, but it never asks for Record audio —
-there's nothing real for it to read. If you'd rather see an honest "not reacting" message than a wave
-that's just performing, use Full instead.
+there's nothing real for it to read. If you'd rather have a wave that follows the real audio (and an
+honest "not reacting" message when it can't), use Full instead.
 
 ### "App blocked to protect your device" (Google Play Protect)
 
@@ -152,7 +155,8 @@ rest.
 ```
 
 Release builds are signed with a private key read from a gitignored `keystore.properties`; without it
-(a fresh clone) they fall back to the debug key so they still build.
+(a fresh clone) packaging a release fails on purpose, so nothing is ever quietly signed with the debug key.
+Add `-PallowDebugSignedRelease` for a throwaway local build.
 
 There are also 30 on-device tests that drive the real gesture engine and the whole timer flow on a phone. See
 [`CONTRIBUTING.md`](CONTRIBUTING.md) for how to run them safely (Gradle's own connected-test task
