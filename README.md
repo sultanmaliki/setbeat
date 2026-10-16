@@ -16,11 +16,9 @@ around the timer with its artwork and a waveform that moves with the beat.
 </div>
 
 <div align="center">
-<video src="https://github.com/sultanmaliki/setbeat/raw/main/docs/demo.mp4" poster="https://raw.githubusercontent.com/sultanmaliki/setbeat/main/docs/demo-poster.jpg" controls muted width="720">
-  <a href="docs/demo.mp4"><img src="docs/demo-poster.jpg" alt="Watch the 23-second SetBeat demo video" width="720" /></a>
-</video>
+<a href="https://github.com/sultanmaliki/setbeat/raw/main/docs/demo.mp4"><img src="docs/demo-poster.jpg" alt="Watch the 23-second SetBeat demo video" width="720" /></a>
 <br />
-<sub>23-second demo · <a href="docs/demo.mp4">open the video</a> · The app shown in the video is a recreation with a made-up track.<br />
+<sub>23-second demo · <a href="https://github.com/sultanmaliki/setbeat/raw/main/docs/demo.mp4">click the picture to play it</a> · The app shown in the video is a recreation with a made-up track.<br />
 Music: "Happy Beats / Business Moves, Vol. 9" by <a href="https://ende.app/en">ende.app</a> (not covered by this project's Apache-2.0 licence).</sub>
 </div>
 
