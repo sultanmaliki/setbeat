@@ -97,8 +97,8 @@ android {
     }
 
     // AGP otherwise embeds a Google-signed blob listing the dependencies in every APK/bundle. It is
-    // opaque to anyone verifying a build and F-Droid rejects it; the dependency list is public in
-    // gradle/libs.versions.toml anyway.
+    // opaque to anyone verifying a build; the dependency list is public in gradle/libs.versions.toml
+    // anyway.
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false

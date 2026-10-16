@@ -146,7 +146,7 @@ them here.
   alarm docs it is auto-granted on Android 13+ with no user flow, but is
   subject to Google Play's limited-use-cases policy. A countdown timer
   should qualify as a genuine timer/alarm use, but that is a **Play Console
-  question to confirm before any Play submission**; GitHub/F-Droid
+  question to confirm before any Play submission**; GitHub
   distribution is unaffected. `SCHEDULE_EXACT_ALARM` alone would need a
   per-user grant flow on Android 13+.
 - **YouTube / YouTube Music "play from link" — DECIDED AGAINST, 2026-09-21.**
@@ -285,18 +285,11 @@ them here.
   Merged release manifests were checked: exported components are exactly MainActivity, BootReceiver,
   the permission-gated listener (Full/Vibes), and permission-gated library components.
 
-- **F-Droid preparation — 2026-10-13 (v0.3.5), not yet submitted.** F-Droid builds from source and
-  signs with its own key, one app per application id. Decisions: (1) list only the **`full`**
-  edition (the superset); Standalone and Vibes stay on GitHub Releases. (2) F-Droid-signed installs and
-  GitHub-release installs can't update each other (different signing key), so a user picks one source.
-  Reproducible-build verification against the GitHub APKs (which would let F-Droid publish the
-  maintainer's signature) was not attempted. (3) Repo changes: `dependenciesInfo` off (F-Droid rejects
-  the Google-signed blob; confirmed present in 0.3.4's signing block, absent in 0.3.5's); wrapper
-  checksum added; `gradle-daemon-jvm.properties` removed (unverified JDK 25 download; the build works
-  on a plain JDK 17+, re-checked: tests, lint and all three release builds pass). (4) The release-signing
-  fail-closed check needs `-PallowDebugSignedRelease` on F-Droid's builder, set via `gradleprops` in the
-  draft recipe (`docs/fdroid/dev.fitnesstimer.yml`). Unverified: F-Droid's build server having Android
-  platform 37 (`compileSdk`) and a JDK that runs Gradle 9.7.1 / AGP 9.4.0; reviewers will find out.
+- **Build hardening — 2026-10-13 (v0.3.5).** Packaging changes, no app behaviour change: `dependenciesInfo` off
+  (AGP otherwise embeds an opaque Google-signed dependency blob in every APK; confirmed present in
+  0.3.4's signing block, absent in 0.3.5's); Gradle wrapper pinned by SHA-256; `gradle-daemon-jvm.properties`
+  removed (it pointed Gradle at an unverified JDK 25 download; the build works on a plain JDK 17+, re-checked:
+  tests, lint and all three release builds pass).
 
 - **Beat haptics — 2026-10-16 (v0.3.6), Full edition only, opt-in.** Owner asked for a premium
   feel via a vibration on each beat. Decisions: (1) **Full only.** Vibes' beat is procedural, so it
@@ -322,7 +315,7 @@ them here.
   needs ≥29 (silent no-op fallback below that); some haptic constants need
   ≥34. No device-reach data available locally — pick a floor once that's
   known, likely 29 or 30.
-- **Distribution channel(s).** F-Droid/GitHub APK vs. Google Play vs. both.
+- **Distribution channel(s).** GitHub APK vs. Google Play vs. both.
   Affects the restricted-settings/notification-listener onboarding design
   and whether the Play policy check below is needed at all.
 - **Accessibility fallback.** TalkBack intercepts one-finger gestures, so
@@ -360,8 +353,8 @@ them here.
 - **Play policy on `BIND_NOTIFICATION_LISTENER_SERVICE`.** No primary Play
   policy page names it. Check directly in Play Console's "App content" flow
   before submitting, if Play distribution is chosen.
-- **Restricted-settings trigger specifics.** Whether an F-Droid-client
-  install vs. a raw sideloaded APK behaves differently for the Android 13+
+- **Restricted-settings trigger specifics.** Whether an install through a
+  package-installer app vs. a raw sideloaded APK behaves differently for the Android 13+
   notification-listener toggle block isn't stated in any primary source
   found. Test on a real device with each install method.
 - **Android Developer Verification 2027 rollout.** Global sideload

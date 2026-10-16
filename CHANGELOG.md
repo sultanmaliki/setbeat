@@ -20,17 +20,15 @@ under the earlier app names *Fitness Timer* (0.1 to 0.2) and *Cadence* (0.2.1 to
   per detected beat, 18 to 42 ms long with intensity following the hit strength; the owner felt it
   and said it felt good. The detector's timing against what you hear was judged by feel, not measured.
 
-## 0.3.5 - ready for F-Droid
-No change to what the app does. Build and packaging only, so F-Droid can build it from source:
+## 0.3.5 - build and packaging hardening
+No change to what the app does. Build and packaging only:
 - **Removed the opaque dependency-metadata blob** AGP embeds in every APK (`dependenciesInfo` off;
-  the published 0.3.4 APKs had it, checked in the APK signing block). F-Droid rejects it. The
-  dependency list is public in `gradle/libs.versions.toml`.
+  the published 0.3.4 APKs had it, checked in the APK signing block). The dependency list is public
+  in `gradle/libs.versions.toml`.
 - **Gradle wrapper pinned by checksum** (`distributionSha256Sum`, matching gradle.org and my own
   download of the 9.7.1 distribution), closing an audit hardening note.
 - **Dropped `gradle/gradle-daemon-jvm.properties`**, which pointed Gradle at an unverified JDK 25
   download. Builds use whatever JDK 17+ runs Gradle (Android Studio's JBR works; CONTRIBUTING.md).
-- **F-Droid store listing** under `fastlane/metadata/android/en-US/` and a draft build recipe in
-  `docs/fdroid/`. Not yet submitted or accepted; until it is, GitHub Releases is the only source.
 
 ## 0.3.4 - the wave works with spatial audio on, plus security hardening
 - **Fixed: the beat wave stayed flat with Xiaomi's "Immersive sound" on.** Owner report, then
