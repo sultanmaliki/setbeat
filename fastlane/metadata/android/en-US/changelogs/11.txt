@@ -1,0 +1,1 @@
+The beat wave now keeps working when a system spatial-audio effect (e.g. Xiaomi Immersive sound) is on: it finds the playing track's own audio session when the main mix is silent. Playback service no longer exported to other apps. Release builds refuse the debug signing key. Docs and in-app hint corrected.

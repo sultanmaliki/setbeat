@@ -1,0 +1,43 @@
+# Draft F-Droid build metadata for SetBeat, for a merge request to
+# https://gitlab.com/fdroid/fdroiddata  (copy to metadata/dev.fitnesstimer.yml in a fork).
+# Not used by the app build. Store text, icon, screenshots and changelogs come from
+# fastlane/metadata/android/en-US/ in this repo, so none are repeated here.
+#
+# Decisions behind it (see DECISIONS.md, "F-Droid"):
+#  - Only the `full` edition is listed: F-Droid allows one app per application id, and Full is the
+#    superset (companion mode + real wave). Standalone and Vibes stay on GitHub Releases.
+#  - F-Droid signs with its own key, so an F-Droid install and a GitHub-release install of the same
+#    app cannot update each other (Android refuses a different signing key). Pick one source.
+#  - allowDebugSignedRelease: release packaging refuses to run without the maintainer's private
+#    keystore (to never ship a debug-signed APK by mistake); F-Droid has no such keystore and
+#    re-signs anyway, so it opts in.
+
+Categories:
+  - Sports & Health
+  - Multimedia
+License: Apache-2.0
+AuthorName: Sultan Maliki
+WebSite: https://github.com/sultanmaliki/setbeat
+SourceCode: https://github.com/sultanmaliki/setbeat
+IssueTracker: https://github.com/sultanmaliki/setbeat/issues
+Changelog: https://github.com/sultanmaliki/setbeat/blob/HEAD/CHANGELOG.md
+
+AutoName: SetBeat
+
+RepoType: git
+Repo: https://github.com/sultanmaliki/setbeat.git
+
+Builds:
+  - versionName: 0.3.5
+    versionCode: 11
+    commit: v0.3.5
+    subdir: app
+    gradle:
+      - full
+    gradleprops:
+      - allowDebugSignedRelease=true
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 0.3.5
+CurrentVersionCode: 11

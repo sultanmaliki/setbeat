@@ -113,6 +113,14 @@ verify**. Contributions are licensed under the project's [Apache-2.0](LICENSE) l
    `setbeat-standalone-vX.Y.Z.apk`, `setbeat-vibes-vX.Y.Z.apk`), their SHA-256 checksums and detailed
    notes, including a "Not verified" section.
 
+6. If the app is on F-Droid: tag the release `vX.Y.Z` (it must equal `versionName`), add
+   `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt` (max 500 characters). F-Droid's daily
+   update check picks up the tag and builds the `full` edition itself.
+
+**F-Droid.** The draft build recipe is `docs/fdroid/dev.fitnesstimer.yml`; store text, icon and
+screenshots are in `fastlane/metadata/android/en-US/`. F-Droid signs with its own key, so installs from
+F-Droid and from GitHub Releases cannot update each other. See `DECISIONS.md`.
+
 **Signing key.** Releases are signed with a private key kept outside the repo
 (`keystore.properties`, gitignored, points at the `.jks`). **Back both files up somewhere safe:** if
 the key is lost, no update can ever install over existing copies. Never commit them. The same key can

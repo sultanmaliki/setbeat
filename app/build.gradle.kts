@@ -37,8 +37,8 @@ android {
         // Not yet the final v1 minSdk decision.
         minSdk = 29
         targetSdk = 37
-        versionCode = 10
-        versionName = "0.3.4"
+        versionCode = 11
+        versionName = "0.3.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -94,6 +94,14 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    // AGP otherwise embeds a Google-signed blob listing the dependencies in every APK/bundle. It is
+    // opaque to anyone verifying a build and F-Droid rejects it; the dependency list is public in
+    // gradle/libs.versions.toml anyway.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 }
 
