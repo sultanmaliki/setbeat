@@ -38,6 +38,7 @@ class EditionFullTest {
     @Test fun audioCaptureAndNoInternetPermissions() {
         val requested = pm.getPackageInfo(ctx.packageName, PackageManager.GET_PERMISSIONS).requestedPermissions.orEmpty().toSet()
         assertTrue("android.permission.RECORD_AUDIO" in requested)
+        assertTrue("android.permission.VIBRATE" in requested) // beat haptics
         assertTrue("android.permission.INTERNET" !in requested)
     }
 

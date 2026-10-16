@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.media.audiofx.Visualizer
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -88,6 +89,11 @@ object AudioLevelSource {
     private var visible = false
     private var normalizer = BandNormalizer()
     private var smoother = BandSmoother()
+    private var beatDetector = BeatDetector()
+
+    /** Called from the capture thread with the beat strength (0.25..1) on each detected beat; null = off. */
+    @Volatile
+    var onBeat: ((Float) -> Unit)? = null
     private var silentCallbacks = 0
     private var callbacks = 0
     @Volatile private var discovering = false
@@ -122,6 +128,7 @@ object AudioLevelSource {
             v.captureSize = sizeRange[1].coerceAtMost(1024)
             normalizer = BandNormalizer()
             smoother = BandSmoother()
+            beatDetector = BeatDetector()
             silentCallbacks = 0
             callbacks = 0
             val rate = Visualizer.getMaxCaptureRate().coerceAtLeast(1)
@@ -170,7 +177,13 @@ object AudioLevelSource {
                 Log.d(TAG, "[viz] ACTIVE: first non-zero data session=$session peak=$peak samplingRate=${samplingRateHz}Hz size=${fft.size}")
             }
         }
-        val bands = smoother.smooth(normalizer.normalize(computeBandMagnitudes(fft, samplingRateHz)))
+        val raw = computeBandMagnitudes(fft, samplingRateHz)
+        val bands = smoother.smooth(normalizer.normalize(raw))
+        val beat = beatDetector.onFrame(SystemClock.uptimeMillis(), raw[BAND_LOW])
+        if (beat > 0f) {
+            Log.d(TAG, "[viz] beat strength=${"%.2f".format(beat)} low=${"%.0f".format(raw[BAND_LOW])}")
+            onBeat?.invoke(beat)
+        }
         levels = bands
         if (callbacks % 40 == 1) {
             Log.d(TAG, "[viz] session=$session peak=${"%.1f".format(peak)} low=${"%.2f".format(bands[0])} mid=${"%.2f".format(bands[1])} high=${"%.2f".format(bands[2])}")

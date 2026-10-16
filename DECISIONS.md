@@ -298,6 +298,22 @@ them here.
   draft recipe (`docs/fdroid/dev.fitnesstimer.yml`). Unverified: F-Droid's build server having Android
   platform 37 (`compileSdk`) and a JDK that runs Gradle 9.7.1 / AGP 9.4.0; reviewers will find out.
 
+- **Beat haptics — 2026-10-16 (v0.3.6), Full edition only, opt-in.** Owner asked for a premium
+  feel via a vibration on each beat. Decisions: (1) **Full only.** Vibes' beat is procedural, so it
+  would buzz to a made-up rhythm unrelated to the music; Standalone has no wave. (2) **Off by
+  default**, switched on from the top-right menu: a phone on a bench or in a pocket buzzing to the
+  beat would annoy, and it costs battery. (3) **`VIBRATE` declared in `app/src/full/` only** (a
+  normal permission, no prompt), so the other editions' permission lists don't change. (4) **Media
+  vibration usage** (`VibrationAttributes.USAGE_MEDIA` on API 33+): on the test phone the system's
+  touch-feedback setting is off, so the app's existing `performHapticFeedback` calls are logged
+  `ignored_for_settings`, while media-usage vibrations play. (5) **Detector** (`BeatDetector`):
+  a bass-*level* threshold missed up to 7 s stretches on a real track (busy bass, rarely quiet);
+  switched to the frame-to-frame *rise* in the low band against its recent mean plus 0.7 standard
+  deviations (never below 8), 280 ms minimum gap, tuned offline on a 50 s capture from the phone
+  (gaps about 1.2 s, about 115 detections per minute on that track). Unverified: other genres,
+  quiet music, and timing against the audible beat beyond "feels good" from the owner (Visualizer
+  capture itself adds some delay).
+
 ## Needs a decision, not urgent
 
 - **Artwork bars — RESOLVED 2026-09-21:** auto-trim implemented (`ArtTrim.kt`, `PLAN.md`

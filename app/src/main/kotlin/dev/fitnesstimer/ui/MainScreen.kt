@@ -47,6 +47,7 @@ import dev.fitnesstimer.gesture.timerGestures
 import dev.fitnesstimer.media.connectMediaController
 import dev.fitnesstimer.media.tryPersistReadGrant
 import dev.fitnesstimer.nowplaying.AudioLevelSource
+import dev.fitnesstimer.nowplaying.BeatHaptics
 import dev.fitnesstimer.nowplaying.NowPlayingRepository
 import dev.fitnesstimer.nowplaying.isBluetoothAudioOutputActive
 import dev.fitnesstimer.nowplaying.POSITION_UNKNOWN
@@ -256,6 +257,16 @@ fun MainScreen(debugUris: List<Uri> = emptyList()) {
         }
     }
     DisposableEffect(Unit) { onDispose { AudioLevelSource.setWanted(false) } }
+
+    // Beat haptics (Full edition, opt-in): a short vibration on each detected beat. Only offered when
+    // the wave itself runs on real audio and the phone can vibrate; off by default.
+    var beatHaptics by remember { mutableStateOf(prefs.getBoolean("beat_haptics", false)) }
+    val hapticsAvailable = remember { BeatHaptics.init(context) } // cheap, idempotent; true when a pulse can be felt
+    val hapticsOffered = !fakeWave && companionAvailable && recordGranted && hapticsAvailable
+    DisposableEffect(beatHaptics, hapticsOffered) {
+        AudioLevelSource.onBeat = if (beatHaptics && hapticsOffered) { strength -> BeatHaptics.pulse(strength) } else null
+        onDispose { AudioLevelSource.onBeat = null }
+    }
 
     // Once per current item: sample ambient color, and embedded artwork
     // (used only in audio mode).
@@ -498,6 +509,12 @@ fun MainScreen(debugUris: List<Uri> = emptyList()) {
     if (showSourceMenu) {
         MediaSourceMenu(
             showNowPlaying = companionAvailable,
+            beatHaptics = if (hapticsOffered) beatHaptics else null,
+            onToggleBeatHaptics = {
+                beatHaptics = !beatHaptics
+                prefs.edit().putBoolean("beat_haptics", beatHaptics).apply()
+                if (beatHaptics) BeatHaptics.pulse(0.8f) // so you feel what you just turned on
+            },
             onDismiss = { showSourceMenu = false },
             onNowPlaying = {
                 showSourceMenu = false

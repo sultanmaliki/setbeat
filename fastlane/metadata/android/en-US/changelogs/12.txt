@@ -1,0 +1,1 @@
+New: optional beat haptics (Full edition): a short vibration on each bass hit, stronger on big ones. Off by default; turn it on from the top-right menu. Uses the normal Vibrate permission. No other changes.

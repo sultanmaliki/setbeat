@@ -28,9 +28,9 @@ RepoType: git
 Repo: https://github.com/sultanmaliki/setbeat.git
 
 Builds:
-  - versionName: 0.3.5
-    versionCode: 11
-    commit: v0.3.5
+  - versionName: 0.3.6
+    versionCode: 12
+    commit: v0.3.6
     subdir: app
     gradle:
       - full
@@ -39,5 +39,5 @@ Builds:
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 0.3.5
-CurrentVersionCode: 11
+CurrentVersion: 0.3.6
+CurrentVersionCode: 12
