@@ -4,6 +4,22 @@ All notable changes to SetBeat, newest first. Each release has fuller notes (and
 [Releases](https://github.com/sultanmaliki/setbeat/releases) page. Versions before 0.2.3 were published
 under the earlier app names *Fitness Timer* (0.1 to 0.2) and *Cadence* (0.2.1 to 0.2.2).
 
+## 0.3.6 - beat haptics
+- **New (Full edition, optional): your phone vibrates on the beat.** A short, crisp pulse on each bass
+  hit, longer and stronger on the big ones, so you feel the music as well as see it. It is **off by
+  default**: open the top-right menu and tap *Beat haptics* (you get a confirming pulse). It only runs
+  while the companion screen is open and the music is playing, so it costs nothing otherwise.
+- How it finds the beat: a new detector watches how much the bass *jumps* between capture frames
+  (about 20 per second) rather than how loud it is. A loudness threshold was tried first and missed
+  stretches up to 7 seconds on a real track; the jump-based one tracked the same track with gaps around
+  a second. Tuned on a 50 s capture of the bass from the test phone, covered by unit tests.
+- Uses the normal **Vibrate** permission (Android grants it at install, no prompt), declared by the
+  Full edition only. Standalone and Vibes are unchanged. Vibes has no real audio to follow, so it
+  does not get haptics rather than buzzing to a made-up beat.
+- Verified on the phone: with the toggle on, the system vibration log shows a media-usage vibration
+  per detected beat, 18 to 42 ms long with intensity following the hit strength; the owner felt it
+  and said it felt good. The detector's timing against what you hear was judged by feel, not measured.
+
 ## 0.3.5 - ready for F-Droid
 No change to what the app does. Build and packaging only, so F-Droid can build it from source:
 - **Removed the opaque dependency-metadata blob** AGP embeds in every APK (`dependenciesInfo` off;

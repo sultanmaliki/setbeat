@@ -44,6 +44,9 @@ mid-set.
   playing in its own app, so it works with the screen off.
 - **Beat-reactive wave.** A colour-graded waveform, tinted from the artwork, that reacts to bass,
   mids and highs in real time. It goes completely idle when paused.
+- **Beat haptics (Full edition, optional).** A short, crisp vibration on each bass hit, stronger on
+  the big ones, so you feel the beat as well as see it. Off by default; switch it on from the
+  top-right menu (*Beat haptics*). It only runs while the companion screen is open and playing.
 - **Gesture control.** Seek, scrub, play/pause and skip tracks in the source app without looking.
 - **Stopwatch and countdown.** Accurate across sleep, restored after the app is killed, with a
   **background alarm** that rings even when the screen is off.
@@ -143,6 +146,7 @@ SetBeat needs Android 10 or newer.
 |---|---|---|
 | Notification access | Reading what other apps are playing (title, artwork, progress) and controlling them | **Full and Vibes only.** Reads **media sessions only**. It never reads your notifications. |
 | Record audio (+ Modify audio settings) | Android's audio visualizer, to measure low/mid/high loudness for the wave | **Full edition only**, optional. The microphone is **not** used; nothing is recorded, stored or sent. Android simply gates the visualizer behind this permission. Vibes doesn't ask for this at all — its wave doesn't read anything real. |
+| Vibrate | The optional beat haptics | **Full edition only.** A normal permission: Android grants it at install, with no prompt. Standalone and Vibes don't declare it. |
 | Exact alarms, boot completed | Ringing when a countdown ends, and re-arming it after a reboot | All three editions. |
 | Notifications | The "Time's up" alert | All three editions. Asked when you pick a countdown. |
 

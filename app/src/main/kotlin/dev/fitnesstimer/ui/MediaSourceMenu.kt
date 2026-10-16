@@ -29,6 +29,8 @@ fun MediaSourceMenu(
     onOpenPlaylists: () -> Unit,
     onNowPlaying: () -> Unit,
     showNowPlaying: Boolean = true,
+    beatHaptics: Boolean? = null, // null = not offered (edition without the wave, or no audio access)
+    onToggleBeatHaptics: () -> Unit = {},
 ) {
     Box(
         Modifier
@@ -62,6 +64,16 @@ fun MediaSourceMenu(
                     .clickable(onClick = onChooseFile)
                     .padding(16.dp),
             )
+            if (beatHaptics != null) {
+                Text(
+                    if (beatHaptics) "Beat haptics: on" else "Beat haptics: off",
+                    color = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = onToggleBeatHaptics)
+                        .padding(16.dp),
+                )
+            }
             Text(
                 "Playlists",
                 color = Color.White,

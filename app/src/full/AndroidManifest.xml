@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
+    <!-- Beat haptics (opt-in, Full only): a short vibration on each detected beat. Normal-level permission:
+         no prompt, granted at install. Not declared by the standalone or vibes editions. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application>
         <!-- FULL EDITION ONLY. Exists so the user can grant notification access, which authorizes
              reading other apps' media sessions (PLAN.md N). The service ignores all notifications.

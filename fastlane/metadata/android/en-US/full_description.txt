@@ -4,6 +4,7 @@ SetBeat is a gesture-driven gym timer that rides your music. The timer is a quie
 <ul>
 <li><b>Now playing companion:</b> shows the title, artist, artwork and progress of what any music app is playing, in a clean player. The music keeps playing in its own app, so it works with the screen off. Needs notification access (media sessions only).</li>
 <li><b>Beat-reactive wave:</b> a colour-graded waveform tinted from the artwork that moves with the bass, mids and highs of the music. It uses Android's audio visualizer, which needs the Record audio permission. Nothing is recorded, stored or sent anywhere. Some phones or music apps do not let any app read their audio (for example a hardware decode path); SetBeat then says so instead of faking a wave.</li>
+<li><b>Beat haptics (optional):</b> a short vibration on each bass hit, so you feel the beat. Off by default; switch it on from the top-right menu. Uses the normal Vibrate permission.</li>
 <li><b>Gesture control:</b> seek, scrub, play/pause and skip tracks in the source app without looking.</li>
 <li><b>Stopwatch and countdown:</b> accurate across sleep, restored after the app is killed, with a background alarm that rings even when the screen is off.</li>
 <li><b>Local media:</b> play your own videos and audio files with playlists, with the timer drawn as a negative effect over the picture.</li>
