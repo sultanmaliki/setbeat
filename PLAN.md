@@ -38,7 +38,7 @@ already playing, and never plays it itself. See section N.
 | Custom gesture system (tap/double-tap/2-finger/hold) | Straightforward, hand-built | No built-in Compose detector for two-finger tap/swipe; requires a custom `pointerInput` state machine |
 | Exact countdown-complete alarm while backgrounded | Straightforward, needs a policy choice | `SCHEDULE_EXACT_ALARM` (user-grant) vs `USE_EXACT_ALARM` (Play auto-grants to genuine alarm/timer apps) |
 | Play Store distribution w/ NotificationListenerService | Unconfirmed | No primary Play policy page names `BIND_NOTIFICATION_LISTENER_SERVICE` — verify directly in Play Console before submitting |
-| F-Droid / GitHub-APK distribution | Fully local, Android-dependent risk | Media3 core has no proprietary deps (Apache-2.0). Risk: Android 13+ "restricted settings" can block sideloaded installs' notification-listener grant until manually unblocked |
+| GitHub-APK distribution | Fully local, Android-dependent risk | Media3 core has no proprietary deps (Apache-2.0). Risk: Android 13+ "restricted settings" can block sideloaded installs' notification-listener grant until manually unblocked |
 
 ### The rendering question
 
@@ -220,7 +220,7 @@ convention, not a documented Android formula.
 7. ~~Online stream source~~ — dropped from v1, 2026-09-20 (see `DECISIONS.md`).
 8. ~~Source-picker~~ — done as a top-right menu (Now playing / choose file / playlists). Still open:
    polish and the accessibility semantics layer (`DECISIONS.md`).
-9. Packaging — F-Droid metadata, Play submission groundwork if desired
+9. Packaging — Play submission groundwork if desired
    (including the Play Console policy check from section B).
 
 ## J. V1 scope
@@ -256,7 +256,7 @@ update), live-blurred ambient background (deferred, see section H).
 - Restricted-settings onboarding friction for sideloaded installs — design
   the onboarding screen assuming it might happen.
 - Android Developer Verification's 2027 global rollout is a standing,
-  unresolved risk to sideload/F-Droid distribution.
+  unresolved risk to sideload distribution.
 - Play's policy stance on `BIND_NOTIFICATION_LISTENER_SERVICE` is
   unconfirmed from docs — check Play Console directly before submitting.
 - Android 17 background-audio hardening can silently swallow the
@@ -288,7 +288,7 @@ update), live-blurred ambient background (deferred, see section H).
   Media3 codec extensions are excluded.
 - No telemetry — contradicts the no-cloud/no-accounts requirement, and
   there's no need for it on a personal-use project.
-- Release: tagged GitHub Releases (APK) → F-Droid once stable → Play as an
+- Release: tagged GitHub Releases (APK) → Play as an
   optional secondary channel pending the policy check above.
 
 ## N. v0.2 — Companion mode (decided 2026-09-21)
